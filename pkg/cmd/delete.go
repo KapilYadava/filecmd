@@ -7,14 +7,16 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use: "delete [filepath]",
+	Use:   "delete [filepath]",
+	Short: "Delete file",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return delete(args)
 	},
 }
 
 var deleteAllCmd = &cobra.Command{
-	Use: "deleteAll [filepath]",
+	Use:   "deleteAll [filepath]",
+	Short: "Delete all files or dirs",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return deleteAll(args)
 	},

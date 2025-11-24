@@ -10,8 +10,9 @@ import (
 )
 
 var createCmd = &cobra.Command{
-	Use:  "create [filepath] [content]",
-	Args: cobra.ExactArgs(2),
+	Use:   "create [filepath] [content]",
+	Short: "Create file",
+	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return create(args)
 	},

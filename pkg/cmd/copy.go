@@ -11,16 +11,18 @@ import (
 )
 
 var copyCmd = &cobra.Command{
-	Use:  "copy [srcpath] [dstpath]",
-	Args: cobra.ExactArgs(2),
+	Use:   "copy [srcpath] [dstpath]",
+	Short: "Copy file from source to destination",
+	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return copy(args)
 	},
 }
 
 var mvCmd = &cobra.Command{
-	Use:  "mv [srcpath] [dstpath]",
-	Args: cobra.ExactArgs(2),
+	Use:   "mv [srcpath] [dstpath]",
+	Short: "Move file",
+	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return move(args)
 	},

@@ -10,8 +10,9 @@ import (
 )
 
 var appendCmd = &cobra.Command{
-	Use:  "append [filepath] [content]",
-	Args: cobra.ExactArgs(2),
+	Use:   "append [filepath] [content]",
+	Short: "Append text at end of file",
+	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return append(args)
 	},

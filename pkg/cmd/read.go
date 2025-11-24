@@ -8,8 +8,9 @@ import (
 )
 
 var readCmd = &cobra.Command{
-	Use:  "read [filepath]",
-	Args: cobra.ExactArgs(1),
+	Use:   "read [filepath]",
+	Short: "Read file",
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return read(args)
 	},

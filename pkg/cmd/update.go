@@ -9,8 +9,9 @@ import (
 )
 
 var updateCmd = &cobra.Command{
-	Use:  "update [filepath] [content]",
-	Args: cobra.ExactArgs(2),
+	Use:   "update [filepath] [content]",
+	Short: "Update file",
+	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return update(args)
 	},
