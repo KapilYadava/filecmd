@@ -13,7 +13,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "file",
 	Short: "file management",
-	Long:  `Create, Read, Update, Delete a file. For example file create <filename>`,
+	Long:  `Create, Read, Update, Delete a file. For example: file create <filename>`,
 }
 
 func Execute() {

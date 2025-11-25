@@ -10,34 +10,50 @@ import (
 )
 
 var createCmd = &cobra.Command{
-	Use:   "create [filepath] [content]",
+	Use:   "create",
 	Short: "Create file",
-	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return create(args)
+		path, err := cmd.Flags().GetString("filepath")
+		if err != nil {
+			return err
+		}
+		content, err := cmd.Flags().GetString("content")
+		if err != nil {
+			return err
+		}
+		return create(path, content)
 	},
 }
 
 func init() {
+	createCmd.Flags().StringP("content", "c", "This is my file conent", "file content (required)")
+	if err := createCmd.MarkFlagRequired("content"); err != nil {
+		panic(err)
+	}
+
+	rootCmd.PersistentFlags().StringP("filepath", "f", "", "file path (required)")
+	if err := rootCmd.MarkPersistentFlagRequired("filepath"); err != nil {
+		panic(err)
+	}
 	rootCmd.AddCommand(createCmd)
 }
 
-func create(args []string) error {
-	_, err := os.Stat(args[0])
+func create(path, content string) error {
+	_, err := os.Stat(path)
 	if err == nil {
-		return fmt.Errorf("file %s already exist", args[0])
+		return fmt.Errorf("file %s already exist", path)
 	} else if os.IsNotExist(err) {
-		file, err := os.Create(args[0])
+		file, err := os.Create(path)
 		if err != nil {
 			return err
 		}
 		defer utils.CloseFile(file)
-		_, err = file.WriteString(args[1])
+		_, err = file.WriteString(content)
 		if err != nil {
 			return err
 		}
 
-		absPath, err := filepath.Abs(args[0])
+		absPath, err := filepath.Abs(path)
 		if err != nil {
 			return err
 		}
