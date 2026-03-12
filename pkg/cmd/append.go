@@ -10,31 +10,34 @@ import (
 )
 
 var appendCmd = &cobra.Command{
-	Use:   "append [filepath] [content]",
+	Use:   "append",
 	Short: "Append text at end of file",
-	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return append(args)
+		return append()
 	},
 }
 
 func init() {
+	appendCmd.Flags().StringVarP(&content, "content", "c", "", "Content to append to file")
+	if err := appendCmd.MarkFlagRequired("content"); err != nil {
+		panic(err)
+	}
 	rootCmd.AddCommand(appendCmd)
 }
 
-func append(args []string) error {
+func append() error {
 	//os.O_CREATE Create the file if it doesn’t exist, os.O_APPEND Always write at the end (no overwrite)
-	file, err := os.OpenFile(args[0], os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		return err
 	}
 	defer utils.CloseFile(file)
-	_, err = file.WriteString(args[1])
+	_, err = file.WriteString(content)
 	if err != nil {
 		return err
 	}
 
-	absPath, err := filepath.Abs(args[0])
+	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
