@@ -17,6 +17,10 @@ fmt: ## format golang source code files.
 lint: golangci-lint-install
 	CGO_ENABLED=0 $(GOLANGCILINT_BIN) run
 
+.PHONY: test
+test: test
+	CGO_ENABLED=0 go test -v ./pkg/cmd
+
 #########################################
 # Tools                                 #
 #########################################
