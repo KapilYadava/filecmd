@@ -9,21 +9,24 @@ import (
 )
 
 var updateCmd = &cobra.Command{
-	Use:   "update [filepath] [content]",
+	Use:   "update",
 	Short: "Update file",
-	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return update(args)
+		return update()
 	},
 }
 
 func init() {
+	updateCmd.Flags().StringVarP(&content, "content", "c", "This is my file conent", "file content (required)")
+	if err := updateCmd.MarkFlagRequired("content"); err != nil {
+		panic(err)
+	}
 	rootCmd.AddCommand(updateCmd)
 }
 
-func update(args []string) error {
+func update() error {
 	//file, err := os.OpenFile(filepath, os.O_WRONLY|os.O_TRUNC, 0644) //os.O_TRUNC clears the file first — all old content is deleted.
-	err := os.WriteFile(args[0], []byte(args[1]), 0644)
+	err := os.WriteFile(path, []byte(content), 0644)
 	if err != nil {
 		return err
 	}
@@ -33,10 +36,10 @@ func update(args []string) error {
 	// 	return err
 	// }
 
-	absPath, err := filepath.Abs(args[0])
+	absPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%s file is created.\n", absPath)
+	fmt.Printf("%s file is updated.\n", absPath)
 	return nil
 }

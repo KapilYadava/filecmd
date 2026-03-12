@@ -7,12 +7,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// change args to flags using cobra cmd here for read command
+
 var readCmd = &cobra.Command{
 	Use:   "read [filepath]",
 	Short: "Read file",
-	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return read(args)
+		return read()
 	},
 }
 
@@ -20,9 +21,8 @@ func init() {
 	rootCmd.AddCommand(readCmd)
 }
 
-func read(args []string) error {
-	filepath := args[0]
-	content, err := os.ReadFile(filepath)
+func read() error {
+	content, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}

@@ -10,79 +10,84 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var dest string
+
 var copyCmd = &cobra.Command{
-	Use:   "copy [srcpath] [dstpath]",
+	Use:   "copy",
 	Short: "Copy file from source to destination",
-	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return copy(args)
+		return copy()
 	},
 }
 
 var mvCmd = &cobra.Command{
-	Use:   "mv [srcpath] [dstpath]",
+	Use:   "mv",
 	Short: "Move file",
-	Args:  cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return move(args)
+		return move()
 	},
 }
 
 func init() {
+	copyCmd.Flags().StringVarP(&dest, "dest", "d", "", "destination file path")
+	if err := copyCmd.MarkFlagRequired("dest"); err != nil {
+		panic(err)
+	}
 	rootCmd.AddCommand(copyCmd)
+
+	mvCmd.Flags().StringVarP(&dest, "dest", "d", "", "destination file path")
+	if err := mvCmd.MarkFlagRequired("dest"); err != nil {
+		panic(err)
+	}
 	rootCmd.AddCommand(mvCmd)
 }
 
-func copy(args []string) error {
-	srcPath := args[0]
-	dstPath := args[1]
-	srcFile, err := os.Open(srcPath)
+func copy() error {
+	pathFile, err := os.Open(path)
 	if err != nil {
 		return err
 	}
-	defer utils.CloseFile(srcFile)
+	defer utils.CloseFile(pathFile)
 
-	dstFile, err := os.Create(dstPath)
+	dstFile, err := os.Create(dest)
 	if err != nil {
 		return err
 	}
 	defer utils.CloseFile(dstFile)
-	_, err = io.Copy(dstFile, srcFile)
+	_, err = io.Copy(dstFile, pathFile)
 	if err != nil {
 		return err
 	}
 
-	absSrcPath, err := filepath.Abs(srcPath)
+	abspathPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
 
-	absDstPath, err := filepath.Abs(dstPath)
+	absDstPath, err := filepath.Abs(dest)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("%s file is copied to %s\n", absSrcPath, absDstPath)
+	fmt.Printf("%s file is copied to %s\n", abspathPath, absDstPath)
 	return nil
 }
 
-func move(args []string) error {
-	srcPath := args[0]
-	dstPath := args[1]
-	err := os.Rename(srcPath, dstPath)
+func move() error {
+	err := os.Rename(path, dest)
 	if err != nil {
 		return err
 	}
-	absSrcPath, err := filepath.Abs(srcPath)
-	if err != nil {
-		return err
-	}
-
-	absDstPath, err := filepath.Abs(dstPath)
+	abspathPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("%s file is moved to %s\n", absSrcPath, absDstPath)
+	absDstPath, err := filepath.Abs(dest)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%s file is moved to %s\n", abspathPath, absDstPath)
 	return nil
 }
