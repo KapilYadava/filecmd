@@ -131,7 +131,9 @@ var _ = Describe("Append Command", func() {
 			Expect(err).To(HaveOccurred())
 
 			// Cleanup: restore permissions for AfterEach
-			os.Chmod(testFile, 0644)
+			err = os.Chmod(testFile, 0644)
+			Expect(err).NotTo(HaveOccurred())
+
 		})
 
 		It("should preserve file permissions", func() {
