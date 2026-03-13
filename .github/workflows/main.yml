@@ -3,21 +3,30 @@ name: Lint
 on:
   push:
     branches: ["main", master]
+  pull_request:
+    branches: ["main", "master"]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-
-      - name: Install dependencies
-        run: go mod download
+      - name: Setup Go Environment
+        uses: ./.github/actions/setup-go-env
 
       - name: Run make lint
         run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go Environment
+        uses: ./.github/actions/setup-go-env
+
+      - name: Run test
+        run: make test

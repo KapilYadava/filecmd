@@ -1,0 +1,17 @@
+name: Setup Go Environment
+description: Setup Go, install dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+
+    - name: Install dependencies
+      run: go mod download
+      shell: bash
